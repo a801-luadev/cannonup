@@ -1146,6 +1146,7 @@ eventLoop = function()
 		loadingNextMap = loadingNextMap - .5
 		if loadingNextMap <= 0 then
 			tfm.exec.newGame(maps[currentRound])
+			loadingNextMap = 3
 		end
 		return
 	end
