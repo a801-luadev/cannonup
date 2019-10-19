@@ -578,7 +578,6 @@ end, 1000, true)
 local players = {
 	room = { _count = 0 },
 	alive = { _count = 0 },
-	dead = { _count = 0 },
 	currentRound = { _count = 0 }
 }
 local soloGame = false
@@ -941,7 +940,6 @@ eventNewPlayer = function(n)
 
 	system.loadPlayerData(n)
 	insert(players.room, n)
-	insert(players.dead, n)
 
 	tfm.exec.lowerSyncDelay(n)
 
@@ -999,7 +997,6 @@ eventNewGame = function()
 		maps = table.shuffle(maps)
 	end
 
-	players.dead = { _count = 0 }
 	players.alive = table.copy(players.room)
 	players.currentRound = table.copy(players.room)
 
@@ -1379,7 +1376,6 @@ eventPlayerDied = function(n)
 		tfm.exec.respawnPlayer(n)
 	end
 	remove(players.alive, n)
-	insert(players.dead, n)
 end
 
 -- FileLoaded
