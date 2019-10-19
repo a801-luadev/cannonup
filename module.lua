@@ -106,9 +106,9 @@ local translation = translations[tfm.get.room.community] or translations.en
 --[[ Data ]]--
 local mapEvaluators = {
 	["Bolodefchoco#0000"] = true,
-	["Acer#1412"] = true,
+	["Acer#0010"] = true,
 	["Jota#0676"] = true,
-	["Grapeup#0000"] = true
+	["Grapeup#0020"] = true
 }
 local artist = {
 	["Flindix#0095"] = true
@@ -575,7 +575,12 @@ end, 1000, true)
 
 --[[ Settings ]]--
 -- Status
-local players = {}
+local players = {
+	room = { _count = 0 },
+	alive = { _count = 0 },
+	dead = { _count = 0 },
+	currentRound = { _count = 0 }
+}
 local soloGame = false
 local review = false
 -- New Game
@@ -631,27 +636,6 @@ system.isPlayer = function(n)
 	]]
 	return not not (string.sub(n, 1, 1) ~= "*" and tfm.get.room.playerList[n] and (os.time() - (tfm.get.room.playerList[n].registrationDate or os.time())) >= 432e6)
 end
-system.players = function(alivePlayers)
-	local alive, total = 0, 0
-	if alivePlayers then
-		alive = {}
-	end
-
-	for k, v in next, tfm.get.room.playerList do
-		if system.isPlayer(k) then
-			total = total + 1
-			if not (v.isDead or v.isVampire) then
-				if alivePlayers then
-					alive[#alive + 1] = k
-				else
-					alive = alive + 1
-				end
-			end
-		end
-	end
-
-	return alive, total
-end
 
 table.copy = function(list)
 	local out = {}
@@ -674,8 +658,8 @@ table.merge = function(this, src)
 		end
 	end
 end
-table.random = function(t)
-	return t[math.random(#t)]
+table.random = function(t, q)
+	return t[math.random(q or #t)]
 end
 table.shuffle = function(t)
 	local len = #t
@@ -687,6 +671,23 @@ table.shuffle = function(t)
 end
 table.turnTable = function(x)
 	return (type(x)=="table" and x or {x})
+end
+local insert = function(where, playerName)
+	if not where[playerName] and system.isPlayer(playerName) then
+		where._count = where._count + 1
+		where[where._count] = playerName
+		where[playerName] = where._count
+	end
+end
+local remove = function(where, playerName)
+	if where[playerName] and system.isPlayer(playerName)  then
+		where._count = where._count - 1
+		table.remove(where, where[playerName])
+		for i = where[playerName], where._count do
+			where[where[i]] = where[where[i]] - 1
+		end
+		where[playerName] = nil
+	end
 end
 
 ui.banner = function(image, aX, aY, n, time)
@@ -796,12 +797,12 @@ end
 
 -- Shoot
 local newCannon = function()
-	local alive = system.players(true)
-	if #alive > 0 then
+	if players.alive._count > 0 then
 		local player
 		repeat
-			player = tfm.get.room.playerList[table.random(alive)]
-		until not player.isDead
+			player = tfm.get.room.playerList[table.random(players.alive, players.alive._count)]
+		until not player or not player.isDead
+		if not player then return end
 		
 		local coordinates = {
 			{ player.x, math.random() * 700 },
@@ -843,12 +844,6 @@ local newCannon = function()
 		
 		toSpawn[#toSpawn + 1] = { os.time() + 150, getCannon(), coordinates[1][2], coordinates[2][2], ang - 90, cannon.speed }
 	end
-end
-
--- Player Update
-local updatePlayers = function()
-	local _, total = system.players()
-	players = { (system.players(true)), total }
 end
 
 -- Valid map code
@@ -945,6 +940,9 @@ eventNewPlayer = function(n)
 	}
 
 	system.loadPlayerData(n)
+	insert(players.room, n)
+	insert(players.dead, n)
+
 	tfm.exec.lowerSyncDelay(n)
 
 	tfm.exec.chatMessage("<J>" .. translation.welcome .. "\n\t<ROSE>Discord: https://discord.gg/quch83R", n)
@@ -1000,6 +998,10 @@ eventNewGame = function()
 		currentRound = 1
 		maps = table.shuffle(maps)
 	end
+
+	players.dead = { _count = 0 }
+	players.alive = table.copy(players.room)
+	players.currentRound = table.copy(players.room)
 
 	for player, data in next, tfm.get.room.playerList do
 		if playerCache[player] then
@@ -1128,7 +1130,7 @@ eventNewGame = function()
 		
 	})
 
-	cannon.quantity = math.ceil(math.max(1, (players[2] - (players[2] % 15)) / 10) * cannon.mul + hardMode)
+	cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
 	
 	if review then
 		local text = tostring(tfm.get.room.currentMap) .. " : " .. (bhAttribute and "<VP>has" or "<R>no") .. " bh <BL>| " .. (mgocAttribute and "has" or "<VP>no") .. " mgoc" .. ((mgocAttribute and ((mgocAttribute < 0 and " <R>" or " <VP>") .. "(" .. tostring(mgocAttribute) .. ")") or "")) .. " <BL>| <J>x" .. cannon.mul
@@ -1150,34 +1152,37 @@ eventLoop = function()
 
 	currentTime, leftTime = currentTime + .5, leftTime - .5
 
-	updatePlayers()
-	soloGame = players[2] == 1
+	soloGame = players.currentRound._count == 1
 
+	local p
+	
 	local save = canSave()
 	if currentTime % 30 == 0 and save then
-		for _, player in next, players[1] do
-			if playerCache[player] and playerCache[player].ready then
-				playerData:set(player, "xp", playerData:get(player, "xp") + module.xp_per_30_sec):save(player)
+		for i = 1, players.alive._count do
+			p = players.alive[i]
+			if playerCache[p] and playerCache[p].ready then
+				playerData:set(p, "xp", playerData:get(p, "xp") + module.xp_per_30_sec):save(p)
 			end
 		end
 	end
-	
-	if not review and (leftTime < 3 or (not soloGame and #players[1] < 2) or #players[1] == 0) then
+
+	if not review and (leftTime < 3 or (not soloGame and players.alive._count < 2) or players.alive._count == 0) then
 		if not soloGame and announceWinner then
 			announceWinner = false
-			if #players[1] > 0 and not wasReview then
-				for k, v in next, players[1] do
+			if players.alive._count > 0 and not wasReview then
+				for i = 1, players.alive._count do
+					p = players.alive[i]
 					if save then
-						playerData:set(v, "victories", playerData:get(v, "victories") + 1)
-						checkTitle(v, 2)
-						playerData:set(v, "xp", playerData:get(v, "xp") + module.xp_per_victory)
-						playerData:save(v)
+						playerData:set(p, "victories", playerData:get(p, "victories") + 1)
+						checkTitle(p, 2)
+						playerData:set(p, "xp", playerData:get(p, "xp") + module.xp_per_victory)
+						playerData:save(p)
 					end
-					tfm.exec.respawnPlayer(v)
-					tfm.exec.setPlayerScore(v, 5, true)
-					tfm.exec.giveCheese(v)
+					tfm.exec.respawnPlayer(p)
+					tfm.exec.setPlayerScore(p, 5, true)
+					tfm.exec.giveCheese(p)
 				end
-				tfm.exec.chatMessage("<J>" .. table.concat(players[1], "<G>, <J>") .. " <J>" .. translation.won)
+				tfm.exec.chatMessage("<J>" .. table.concat(players.alive, "<G>, <J>") .. " <J>" .. translation.won)
 			else
 				tfm.exec.chatMessage("<J>" .. translation.nowinner)
 			end
@@ -1206,7 +1211,7 @@ eventLoop = function()
 			end
 			
 			if currentTime % 20 == 0 then
-				cannon.quantity = math.ceil(math.max(1, (players[2] - (players[2] % 15)) / 10) * cannon.mul + hardMode)
+				cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
 				cannon.speed = cannon.speed + 20
 				cannon.time = math.max(.5, cannon.time - .5)
 			end
@@ -1363,7 +1368,8 @@ end
 -- PlayerLeft
 eventPlayerLeft = function(player)
 	playerData:save(player)
-	updatePlayers()
+	remove(players.room, player)
+	remove(players.currentRound, player)
 end
 
 -- PlayerDied
@@ -1371,6 +1377,8 @@ eventPlayerDied = function(n)
 	if review then
 		tfm.exec.respawnPlayer(n)
 	end
+	remove(players.alive, n)
+	insert(players.dead, n)
 end
 
 -- FileLoaded
@@ -1391,7 +1399,6 @@ eventFileLoaded = function(id, data)
 end
 
 maps = table.shuffle(maps)
-updatePlayers()
 
 for _, f in next, { "AutoShaman", "AutoScore", "AutoNewGame", "AutoTimeLeft", "PhysicalConsumables" } do
 	tfm.exec["disable" .. f]()
