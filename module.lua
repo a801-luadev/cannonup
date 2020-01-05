@@ -1397,13 +1397,19 @@ end
 
 maps = table.shuffle(maps)
 
-for _, f in next, { "AutoShaman", "AutoScore", "AutoNewGame", "AutoTimeLeft", "PhysicalConsumables" } do
-	tfm.exec["disable" .. f]()
-end
+tfm.exec.disableAutoShaman()
+tfm.exec.disableAutoScore()
+tfm.exec.disableAutoNewGame()
+tfm.exec.disableAutoTimeLeft()
+tfm.exec.disablePhysicalConsumables()
+
 tfm.exec.setRoomMaxPlayers(25)
 tfm.exec.setGameTime(5, false) -- Prevention
 
 system.disableChatCommandDisplay(nil, true)
 
-table.foreach(tfm.get.room.playerList, eventNewPlayer)
+for playerName in next, tfm.get.room.playerList do
+	eventNewPlayer(playerName)
+end
+
 tfm.exec.newGame(maps[currentRound])
