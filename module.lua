@@ -561,7 +561,7 @@ local lvlToXp = function(lvl)
 end
 
 --[[ Maps ]]--
-local maps = { 6001536, 6001536, 4591929, "#10" }
+local maps = { 6001536, 6001536, 4591929, "#10" } -- More maps are loaded via file
 local mapHashes = { }
 local mapsToAdd = { }
 
