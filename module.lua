@@ -1137,7 +1137,7 @@ local xmlFunctions = {
 
 local currentTime, leftTime, loadingNextMap = 0, 125, 0
 eventNewGame = function()
-	loadingNextMap = 666
+	loadingNextMap = 0
 	currentTime, leftTime = 0, 125
 
 	currentRound = currentRound + 1
@@ -1201,14 +1201,12 @@ eventNewGame = function()
 			tfm.exec.chatMessage(text, k)
 		end
 	end
-	loadingNextMap = 0
 end
 
 -- Loop
 eventLoop = function()
 	timer.loop()
 	if loadingNextMap > 0 then
-		if loadingNextMap == 666 then return end
 		loadingNextMap = loadingNextMap - .5
 		if loadingNextMap <= 0 then
 			tfm.exec.newGame(maps[currentRound])
@@ -1233,6 +1231,8 @@ eventLoop = function()
 		end
 	end
 
+	if currentTime > 3 then return end
+
 	if not review and (leftTime < 3 or (not soloGame and players.alive._count < 2) or players.alive._count == 0) then
 		if not soloGame and announceWinner then
 			announceWinner = false
@@ -1256,33 +1256,30 @@ eventLoop = function()
 		end
 		loadingNextMap = 3
 	else
-		if currentTime > 3 then
-			if currentTime % cannon.time == 0 then
-				for i = 1, cannon.quantity do
-					newCannon()
-				end
+		if currentTime % cannon.time == 0 then
+			for i = 1, cannon.quantity do
+				newCannon()
 			end
+		end
 
-			for k, v in next, table.copy(toSpawn) do
-				if os.time() > v[1] then
-					toDespawn[#toDespawn + 1] = { tfm.exec.addShamanObject(table.unpack(v, 2)), os.time() + 5000 }
-					toSpawn[k] = nil
-				end
+		for k, v in next, table.copy(toSpawn) do
+			if os.time() > v[1] then
+				toDespawn[#toDespawn + 1] = { tfm.exec.addShamanObject(table.unpack(v, 2)), os.time() + 5000 }
+				toSpawn[k] = nil
 			end
+		end
 
-			for k, v in next, table.copy(toDespawn) do
-				if os.time() > v[2] then
-					tfm.exec.removeObject(v[1])
-					toDespawn[k] = nil
-				end
+		for k, v in next, table.copy(toDespawn) do
+			if os.time() > v[2] then
+				tfm.exec.removeObject(v[1])
+				toDespawn[k] = nil
 			end
+		end
 
-			if currentTime % 20 == 0 then
-				cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
-				cannon.speed = cannon.speed + 20
-				cannon.time = math.max(.5, cannon.time - .5)
-			end
-
+		if currentTime % 20 == 0 then
+			cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
+			cannon.speed = cannon.speed + 20
+			cannon.time = math.max(.5, cannon.time - .5)
 		end
 	end
 end
