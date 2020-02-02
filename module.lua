@@ -1231,7 +1231,7 @@ eventLoop = function()
 		end
 	end
 
-	if currentTime > 3 then return end
+	if currentTime <= 3 then return end
 
 	if not review and (leftTime < 3 or (not soloGame and players.alive._count < 2) or players.alive._count == 0) then
 		if not soloGame and announceWinner then
