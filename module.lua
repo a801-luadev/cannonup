@@ -15,14 +15,14 @@ local translations = {
 
 		-- Info
 		nowinner = "No one won!",
-		
+
 		-- Simple words
 		soon = "Soon!",
 		won = "won!",
-		
+
 		-- Profile
 		profile = { "Rounds", "Victories", "Badges" },
-		
+
 		-- Titles
 		unlock = "%s just unlocked the title «%s»",
 		titlecmd = "Type !title to change your title.",
@@ -59,14 +59,14 @@ local translations = {
 	},
 	br = {
 		welcome = "Bem-vindo ao #cannonup. Seu objetivo é ser o sobrevivente!\n<VP>Aperte <B>P</B> para abrir seu perfil ou <B>!p nickname</B> para ver o perfil de alguém!\n<J>Envie mapas em <S>https://atelier801.com/topic?f=6&t=859067\n\t<J>Reporte qualquer problema para Bolodefchoco#0000.",
-	
+
 		nowinner = "Ninguém ganhou!",
-	
+
 		soon = "Em breve!",
 		won = "venceu!",
-		
+
 		profile = { "Partidas", "Vitórias", "Medalhas" },
-		
+
 		unlock = "%s desbloqueou o título «%s»",
 		titlecmd = "Digite !title para mudar seu título.",
 		titlemsg = "Digite !title X para escolher um título na lista abaixo :",
@@ -97,49 +97,6 @@ local translations = {
 				[2] = "Mapper", -- at least 5 maps in the module
 				[3] = "Dodger", -- desviar de x cn
 				[4] = "Rato do Parkour", -- jump 120x
-			}
-		}
-    },
-    he = {
-		welcome = "ברוכים הבאים אל #cannonup. המטרה שלכם היא להיות השורדים!\n<VP>לחצו <B>P</B> בכדי לפתוח את הפרופיל שלכם או <B>!p שם משתמש</B> בכדי לראות פרופיל של מישהו ספציפי!\n<J>הגישו מפות ב- <S>https://atelier801.com/topic?f=6&t=859067\n\t<J>דווחו על כל בעיה אל Bolodefchoco#0000.",
-
-		nowinner = "אף אחד לא ניצח!",
-		
-		soon = "בקרוב!",
-		won = "ניצח!",
-		
-		profile = { "סיבובים", "נצחונות", "תגים" },
-		
-		unlock = "%s השיג את התואר «%s»",
-		titlecmd = "כתבו !title על מנת לשנות את התואר שלכם.",
-		titlemsg = "כתבו !title X על מנת לבחור תואר מהרשימה :",
-		usetitle = "התואר החדש שלכם הוא <CH>«%s»",
-		titles = {
-			[1] = {
-				[1] = "שורדים",
-				[2] = "וותיקים",
-				[3] = "מבורכים",
-				[4] = "אנטי רובוטים",
-				[5] = "מכורים",
-				[6] = "מלכי הגבהה",
-				[7] = "עכבר פסיכדלי"
-			},
-			[2] = {
-				[1] = "עכבר לווה",
-				[2] = "ילד תותח",
-				[3] = "עכבר בלתי ניתן להריגה",
-				[4] = "עכבר בלתי ניתן לאיתור",
-				[5] = "לוחם",
-				[6] = "פיצוץ",
-				[7] = "F = עכבר * A",
-				[8] = "המטריקס",
-				[9] = "שורד מאסטר",
-			},
-			[3] = {
-				[1] = "אבטיח",
-				[2] = "מכין מפות", -- at least 5 maps in the module
-				[3] = "חמקן", -- desviar de x cn
-				[4] = "עכבר פארקוריסט", -- jump 120x
 			}
 		}
 	},
@@ -179,11 +136,11 @@ local titles = {
 		[1] = 10,
 		[2] = 50,
 		[3] = 70,
-		[4] = 150, 
-		[5] = 250, 
-		[6] = 320, 
-		[7] = 450, 
-		[8] = 500, 
+		[4] = 150,
+		[5] = 250,
+		[6] = 320,
+		[7] = 450,
+		[8] = 500,
 		[9] = 1000
 	},
 	[3] = {
@@ -205,7 +162,7 @@ function DataHandler.new(moduleID, skeleton, otherOptions)
 	assert(moduleID, 'Invalid module ID (nil)')
 	assert(moduleID ~= '', 'Invalid module ID (empty text)')
 	assert(skeleton, 'Invalid skeleton (nil)')
-	
+
 	for k, v in next, skeleton do
 		v.type = v.type or type(v.default)
 	end
@@ -346,7 +303,7 @@ function DataHandler.newPlayer(self, name, dataString)
 				local dataName = getDataIndexName(skeleton, dataIndex)
 				local dataType = skeleton[dataName].type
 				local dataDefault = skeleton[dataName].default
-				
+
 				setPlayerData(data, dataType, dataName, dataDefault)
 
 				dataIndex = dataIndex + 1
@@ -359,7 +316,7 @@ function DataHandler.newPlayer(self, name, dataString)
 				local dataName = getDataIndexName(skeleton, i)
 				local dataType = skeleton[dataName].type
 				local dataDefault = skeleton[dataName].default
-				
+
 				setPlayerData(nil, dataType, dataName, dataDefault)
 			end
 		end
@@ -382,7 +339,7 @@ function DataHandler.newPlayer(self, name, dataString)
 		for moduleID, skeleton in pairs(self.otherOptions) do
 			if not modules[moduleID] then
 				local strBuilder = {}
-				for k,v in pairs(skeleton) do	
+				for k,v in pairs(skeleton) do
 					if v.type == 'string' then
 						strBuilder[v.index] = '"'..tostring(v.default)..'"'
 					elseif v.type == 'table' then
@@ -502,7 +459,7 @@ function DataHandler.dumpPlayer(self, name)
 			output[#output+1] = getPlayerDataFrom(name, k)
 		end
 	end
-	
+
 	for k,v in pairs(self.otherData[name]) do
 		output[#output+1] = ','
 		output[#output+1] = k
@@ -531,7 +488,7 @@ function DataHandler.set(self, name, dataName, value, moduleName)
 	else
 		self.players[name][dataName] = value
 	end
-	
+
 	return self
 end
 
@@ -575,7 +532,7 @@ local playerData = DataHandler.new(module.id, {
 		index = 5,
 		default = { 11, 1, 0, 0 } -- Wearing title ((cat - 1) .. id), Round, Victory, Challenge
 	},
-})	
+})
 local playerCache = { }
 
 local xpToLvl = function(xp)
@@ -583,7 +540,7 @@ local xpToLvl = function(xp)
 	for i = 1, 100 do
 		local nlast = last + (i - ((i < 26 and 1 or i < 46 and 20 or 30)))
 		local ntotal = total + nlast
-		
+
 		if ntotal >= xp then
 			level, remain, need = i - 1, xp - total, ntotal - xp
 			return level, remain, need
@@ -599,12 +556,12 @@ local lvlToXp = function(lvl)
 		last = last + (i - ((i < 26 and 1 or i < 46 and 20 or 30)))
 		total = total + last
 	end
-	
+
 	return last, total
 end
 
 --[[ Maps ]]--
-local maps = { 6001536, 6001536, 4591929, "#10" } -- More maps are loaded via file
+local maps = { 6001536, 6001536, 4591929, "#10" }
 local mapHashes = { }
 local mapsToAdd = { }
 
@@ -660,7 +617,7 @@ string.nick = function(player, ignoreCheck)
 	if not ignoreCheck and not player:find("#") then
 		player = player .. "#0000"
 	end
-	
+
 	return string.gsub(string.lower(player), "%a", string.upper, 1)
 end
 string.split = function(value, pattern, f)
@@ -692,7 +649,7 @@ table.merge = function(this, src)
 			if type(v) == "table" then
 				this[k] = table.turnTable(this[k])
 				table.merge(this[k], v)
-			else				
+			else
 				this[k] = this[k] or v
 			end
 		else
@@ -722,7 +679,7 @@ local insert = function(where, playerName)
 	end
 end
 local remove = function(where, playerName)
-	if where[playerName] and system.isPlayer(playerName)  then
+	if where[playerName] then
 		where._count = where._count - 1
 		table.remove(where, where[playerName])
 		for i = where[playerName], where._count do
@@ -732,15 +689,63 @@ local remove = function(where, playerName)
 	end
 end
 
+local timer
+do
+	timer = {
+		_timers = {
+			_count = 0
+		}
+	}
+
+	timer.start = function(callback, ms, times, ...)
+		local t = timer._timers
+		t._count = t._count + 1
+
+		t[t._count] = {
+			id = t._count,
+			callback = callback,
+			args = { ... },
+			defaultMilliseconds = ms,
+			milliseconds = ms,
+			times = times
+		}
+		t[t._count].args[#t[t._count].args + 1] = t[t._count]
+
+		return t._count
+	end
+
+	timer.delete = function(id)
+		timer._timers[id] = nil
+	end
+
+	timer.loop = function()
+		local t
+		for i = 1, timer._timers._count do
+			t = timer._timers[i]
+			if t then
+				t.milliseconds = t.milliseconds - 500
+				if t.milliseconds <= 0 then
+					t.milliseconds = t.defaultMilliseconds
+					t.times = t.times - 1
+
+					t.callback(table.unpack(t.args))
+
+					if t.times == 0 then
+						timer.delete(i)
+					end
+				end
+			end
+		end
+	end
+end
+
 ui.banner = function(image, aX, aY, n, time)
 	time = time or 5
 	aX = aX or 100
 	aY = aY or 100
 
 	local img = tfm.exec.addImage(image .. ".png", "&0", aX, aY, n)
-	system.newTimer(function()
-		tfm.exec.removeImage(img)
-	end, time * 1000, false)
+	timer.start(tfm.exec.removeImage, time * 1000, 1, img)
 end
 
 local xml = {}
@@ -845,13 +850,13 @@ local newCannon = function()
 			player = tfm.get.room.playerList[table.random(players.alive, players.alive._count)]
 		until not player or not player.isDead
 		if not player then return end
-		
+
 		local coordinates = {
 			{ player.x, math.random() * 700 },
 			{ player.y, math.random() * 300 },
 			{ false, false }
 		}
-		
+
 		local id
 		if type(cannon.x) == "table" then
 			id = math.random(#cannon.x)
@@ -863,7 +868,7 @@ local newCannon = function()
 				coordinates[3][1] = true
 			end
 		end
-		
+
 		if type(cannon.y) == "table" then
 			coordinates[2][2] = cannon.y[id]
 			coordinates[3][2] = true
@@ -880,10 +885,10 @@ local newCannon = function()
 		if not coordinates[3][1] and math.abs(coordinates[1][2] - coordinates[1][1]) > 350 then
 			coordinates[1][2] = coordinates[1][1] + math.random(-100,100)
 		end
-		
+
 		local ang = math.deg(math.atan2(coordinates[2][2] - coordinates[2][1],coordinates[1][2] - coordinates[1][1]))
 		tfm.exec.addShamanObject(0, coordinates[1][2] - (coordinates[3][1] and 0 or 10), coordinates[2][2] - (coordinates[3][2] and 0 or 10), ang + 90)
-		
+
 		toSpawn[#toSpawn + 1] = { os.time() + 150, getCannon(), coordinates[1][2], coordinates[2][2], ang - 90, cannon.speed }
 	end
 end
@@ -914,13 +919,13 @@ local checkTitle = function(playerName, category)
 
 	if newTitle and newTitle <= playerData:get(playerName, (category == 1 and "rounds" or "victories")) then
 		titleData[id] = titleData[id] + 1
-		
+
 		playerData:set(playerName, "titles", titleData)
-		
+
 		unlockTitle(playerName, category, titleData[id])
 		save = true
 	end
-	
+
 	playerCache[playerName].titles[id] = titleData[id]
 
 	return save
@@ -949,7 +954,7 @@ do
 		ui.addTextArea(0, "<p align='center'><font size='" .. (#p > 17 and 14 or 18) .. "' color='#" .. colors[(p == module.owner and "owner" or mapEvaluators[p] and "map" or artist[p] and "art" or "normal")] .. "'>" .. (p:gsub("#", "<font size='10'><N2>#", 1)), n, 280, 65, 240, nil, 1, 1, 0, true)
 		playerCache[n].profile[2] = tfm.exec.addImage("165f818ebff.png", ":1", 290, 108, n, true) -- 165df8ebe60.png
 		ui.addTextArea(1, "<font size='16' color='#C1F8FB'>" .. translation.soon, n, 350, 126, 150, nil, 1, 1, 0, true)
-		
+
 		local playerLevel, total, remaining = xpToLvl(playerData:get(p, "xp"))
 		local width = math.clamp(total * (210 / (total + remaining)), 1, 210)
 
@@ -993,8 +998,8 @@ eventNewPlayer = function(n)
 		-- Moves not to be AFK
 		system.bindKeyboard(n, i, true, true)
 	end
-	
-	--ui.banner("15d60d944f5", 140, 135, n)
+
+	ui.banner("15d60d944f5", 140, 135, n)
 end
 
 -- PlayerDataLoaded
@@ -1029,9 +1034,110 @@ eventPlayerDataLoaded = function(playerName, data)
 end
 
 -- NewGame
+local xmlFunctions = {
+	[1] = {
+		attribute = "cn",
+		func = function(value)
+			local coord, axY = xml.getCoordinates(value)
+			if type(coord) == "table" then
+				cannon.x = {}
+				cannon.y = {}
+
+				for k, v in next, coord do
+					cannon.x[#cannon.x + 1] = v.x
+					cannon.y[#cannon.y + 1] = v.y
+				end
+			else
+				if axY == 0 then
+					cannon.x = coord
+				else
+					cannon.y = axY
+				end
+			end
+		end
+	},
+	[2] = {
+		attribute = "cheese",
+		func = function()
+			for n in next, tfm.get.room.playerList do
+				tfm.exec.giveCheese(n)
+			end
+		end
+	},
+	[3] = {
+		attribute = "meep",
+		func = function()
+			for n in next, tfm.get.room.playerList do
+				tfm.exec.giveMeep(n)
+			end
+		end
+	},
+	[4] = {
+		attribute = "quantity",
+		func = function(value)
+			value = tonumber(value) or 1
+			cannon.mul = math.clamp(value, 1, 3)
+		end
+	},
+	[5] = {
+		attribute = "bh",
+		func = function()
+			bhAttribute = true
+		end
+	},
+	[6] = {
+		attribute = "mgoc",
+		func = function(value)
+			mgocAttribute = tonumber(value)
+		end
+	},
+	[7] = {
+		attribute = "style",
+		func = function(cannons)
+			cannons = string.split(cannons, "[^,]+", function(id)
+				id = tonumber(id)
+				if id then
+					if id == 0 then
+						return 17
+					else
+						if id > 0 and id < 12 then
+							return 1700 + id
+						end
+					end
+				end
+				return nil
+			end)
+
+			if #cannons > 0 then
+				cannonID = cannons
+			end
+		end
+	},
+	[8] = {
+		attribute = "time",
+		func = function(value)
+			value = tonumber(value)
+			if value then
+				tfm.exec.setGameTime(math.clamp(value * 60, 60, 180))
+			end
+		end
+	},
+	[9] = {
+		attribute = "size",
+		func = function(value)
+			value = tonumber(value)
+			if value then
+				for n in next, tfm.get.room.playerList do
+					tfm.exec.changePlayerSize(n, value)
+				end
+			end
+		end
+	}
+}
+
 local currentTime, leftTime, loadingNextMap = 0, 125, 0
 eventNewGame = function()
-	loadingNextMap = 0
+	loadingNextMap = 666
 	currentTime, leftTime = 0, 125
 
 	currentRound = currentRound + 1
@@ -1062,7 +1168,7 @@ eventNewGame = function()
 			tfm.exec.killPlayer(player)
 		end
 	end
-	
+
 	toSpawn, toDespawn = {}, {}
 	announceWinner = true
 	cannonID = {}
@@ -1079,110 +1185,30 @@ eventNewGame = function()
 
 	tfm.exec.setGameTime(125)
 
+	for n in next, tfm.get.room.playerList do
+		tfm.exec.changePlayerSize(n, 1) -- it doesn't reset by i
+	end
+
 	local bhAttribute, mgocAttribute = false, false
-	
-	xml.attribFunc(((tfm.get.room.xmlMapInfo or {}).xml or ""), {
-		[1] = {
-			attribute = "cn",
-			func = function(value)
-				local coord, axY = xml.getCoordinates(value)
-				if type(coord) == "table" then
-					cannon.x = {}
-					cannon.y = {}
-					
-					for k, v in next, coord do
-						cannon.x[#cannon.x + 1] = v.x
-						cannon.y[#cannon.y + 1] = v.y
-					end
-				else
-					if axY == 0 then
-						cannon.x = coord
-					else
-						cannon.y = axY
-					end
-				end
-			end
-		},
-		[2] = {
-			attribute = "cheese",
-			func = function()
-				table.foreach(tfm.get.room.playerList,tfm.exec.giveCheese)
-			end
 
-		},
-		[3] = {
-			attribute = "meep",
-			func = function()
-				table.foreach(tfm.get.room.playerList,tfm.exec.giveMeep)
-			end
-
-		},
-		[4] = {
-			attribute = "quantity",
-			func = function(value)
-				value = tonumber(value) or 1
-				cannon.mul = math.clamp(value, 1, 3)
-			end
-		},
-		[5] = {
-			attribute = "bh",
-			func = function()
-				bhAttribute = true
-			end
-		},
-		[6] = {
-			attribute = "mgoc",
-			func = function(value)
-				mgocAttribute = tonumber(value)
-			end
-		},
-		[7] = {
-			attribute = "style",
-			func = function(cannons)
-				cannons = string.split(cannons, "[^,]+", function(id)
-					id = tonumber(id)
-					if id then
-						if id == 0 then
-							return 17
-						else
-							if id > 0 and id < 12 then
-								return 1700 + id
-							end
-						end
-					end
-					return nil
-				end)
-			
-				if #cannons > 0 then
-					cannonID = cannons
-				end
-			end
-		},
-		[8] = {
-			attribute = "time",
-			func = function(value)
-				value = tonumber(value)
-				if value then
-					tfm.exec.setGameTime(math.clamp(value * 60, 60, 180))
-				end
-			end
-		},
-		
-	})
+	xml.attribFunc(((tfm.get.room.xmlMapInfo or {}).xml or ""), xmlFunctions)
 
 	cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
-	
+
 	if review then
 		local text = tostring(tfm.get.room.currentMap) .. " : " .. (bhAttribute and "<VP>has" or "<R>no") .. " bh <BL>| " .. (mgocAttribute and "has" or "<VP>no") .. " mgoc" .. ((mgocAttribute and ((mgocAttribute < 0 and " <R>" or " <VP>") .. "(" .. tostring(mgocAttribute) .. ")") or "")) .. " <BL>| <J>x" .. cannon.mul
 		for k in next, mapEvaluators do
 			tfm.exec.chatMessage(text, k)
 		end
 	end
+	loadingNextMap = 0
 end
 
 -- Loop
 eventLoop = function()
+	timer.loop()
 	if loadingNextMap > 0 then
+		if loadingNextMap == 666 then return end
 		loadingNextMap = loadingNextMap - .5
 		if loadingNextMap <= 0 then
 			tfm.exec.newGame(maps[currentRound])
@@ -1196,7 +1222,7 @@ eventLoop = function()
 	soloGame = players.currentRound._count == 1
 
 	local p
-	
+
 	local save = canSave()
 	if currentTime % 30 == 0 and save then
 		for i = 1, players.alive._count do
@@ -1236,27 +1262,27 @@ eventLoop = function()
 					newCannon()
 				end
 			end
-			
+
 			for k, v in next, table.copy(toSpawn) do
 				if os.time() > v[1] then
 					toDespawn[#toDespawn + 1] = { tfm.exec.addShamanObject(table.unpack(v, 2)), os.time() + 5000 }
 					toSpawn[k] = nil
 				end
 			end
-			
+
 			for k, v in next, table.copy(toDespawn) do
 				if os.time() > v[2] then
 					tfm.exec.removeObject(v[1])
 					toDespawn[k] = nil
 				end
 			end
-			
+
 			if currentTime % 20 == 0 then
 				cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
 				cannon.speed = cannon.speed + 20
 				cannon.time = math.max(.5, cannon.time - .5)
 			end
-		
+
 		end
 	end
 end
@@ -1278,7 +1304,7 @@ eventChatCommand = function(n, c)
 		if p[2] then
 			local category, id = string.match(p[2], "^(%d)(%d+)$")
 			category, id = tonumber(category), tonumber(id)
-			
+
 			if category and id then
 				if category > 0 and category < 4 and id > 0 then
 					if playerCache[n].titles[category + 1] >= id then
@@ -1287,7 +1313,7 @@ eventChatCommand = function(n, c)
 						local t = playerData:get(n, "titles")
 						t[1] = tonumber(category .. id)
 						playerData:set(n, "titles", t):save(n)
-						
+
 						tfm.exec.chatMessage("<BL>" .. string.format(translation.usetitle, translation.titles[category][id]), n)
 					end
 				end
@@ -1381,44 +1407,45 @@ eventChatCommand = function(n, c)
 end
 
 -- Keyboard
-eventKeyboard = function(n, k)
-	if playerCache[n].afkMaps > 0 and not tfm.get.room.playerList[n].isDead then
-		playerCache[n].afkMaps = 0
+eventKeyboard = function(player, k)
+	if playerCache[player].afkMaps > 0 and not tfm.get.room.playerList[player].isDead then
+		playerCache[player].afkMaps = 0
 	end
 
-	if k == keys.P and playerCache[n] and playerCache[n].ready then
-		if playerCache[n].profile.target then
-			ui.removeProfile(n)
+	if k == keys.P and playerCache[player] and playerCache[player].ready then
+		if playerCache[player].profile.target then
+			ui.removeProfile(player)
 		else
-			ui.profile(n, n)
+			ui.profile(player, player)
 		end
 	end
 end
 
 -- TextAreaCallback
-eventTextAreaCallback = function(i,n,c)
+eventTextAreaCallback = function(i, player, c)
 	if c == "close" then
 		for i = 1,2 do
-			ui.removeTextArea(i,n)
+			ui.removeTextArea(i, player)
 		end
 	elseif c == "titles" then
-		eventChatCommand(n, "title")
+		eventChatCommand(player, "title")
 	end
 end
 
 -- PlayerLeft
 eventPlayerLeft = function(player)
 	playerData:save(player)
+	remove(players.alive, player)
 	remove(players.room, player)
 	remove(players.currentRound, player)
 end
 
 -- PlayerDied
-eventPlayerDied = function(n)
+eventPlayerDied = function(player)
 	if review then
-		tfm.exec.respawnPlayer(n)
+		tfm.exec.respawnPlayer(player)
 	end
-	remove(players.alive, n)
+	remove(players.alive, player)
 end
 
 -- FileLoaded
@@ -1440,19 +1467,13 @@ end
 
 maps = table.shuffle(maps)
 
-tfm.exec.disableAutoShaman()
-tfm.exec.disableAutoScore()
-tfm.exec.disableAutoNewGame()
-tfm.exec.disableAutoTimeLeft()
-tfm.exec.disablePhysicalConsumables()
-
+for _, f in next, { "AutoShaman", "AutoScore", "AutoNewGame", "AutoTimeLeft", "PhysicalConsumables" } do
+	tfm.exec["disable" .. f]()
+end
 tfm.exec.setRoomMaxPlayers(25)
 tfm.exec.setGameTime(5, false) -- Prevention
 
 system.disableChatCommandDisplay(nil, true)
 
-for playerName in next, tfm.get.room.playerList do
-	eventNewPlayer(playerName)
-end
-
+table.foreach(tfm.get.room.playerList, eventNewPlayer)
 tfm.exec.newGame(maps[currentRound])
