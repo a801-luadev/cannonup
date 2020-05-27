@@ -1248,13 +1248,14 @@ eventLoop = function()
 					tfm.exec.respawnPlayer(p)
 					tfm.exec.setPlayerScore(p, 5, true)
 					tfm.exec.giveCheese(p)
+					tfm.exec.playerVictory(p)
 				end
 				tfm.exec.chatMessage("<J>" .. table.concat(players.alive, "<G>, <J>") .. " <J>" .. translation.won)
 			else
 				tfm.exec.chatMessage("<J>" .. translation.nowinner)
 			end
 		end
-		loadingNextMap = 3
+		loadingNextMap = 2
 	else
 		if currentTime % cannon.time == 0 then
 			for i = 1, cannon.quantity do
@@ -1443,6 +1444,13 @@ eventPlayerDied = function(player)
 		tfm.exec.respawnPlayer(player)
 	end
 	remove(players.alive, player)
+end
+
+-- PlayerRespawn
+eventPlayerRespawn = function(playerName)
+	if not review then return end
+
+	insert(players.alive, playerName)
 end
 
 -- FileLoaded
