@@ -597,6 +597,7 @@ local currentRound = 1
 local announceWinner = true
 local wasReview = false
 local cannonID = {}
+local mapSettingsReview = false
 -- Hard mode
 local hardMode = string.find(tfm.get.room.name, "*?#cannonup%d+hard$") and 2 or 0
 -- Data
@@ -1195,12 +1196,7 @@ eventNewGame = function()
 
 	cannon.quantity = math.ceil(math.max(1, (players.currentRound._count - (players.currentRound._count % 15)) / 10) * cannon.mul + hardMode)
 
-	if review then
-		local text = tostring(tfm.get.room.currentMap) .. " : " .. (bhAttribute and "<VP>has" or "<R>no") .. " bh <BL>| " .. (mgocAttribute and "has" or "<VP>no") .. " mgoc" .. ((mgocAttribute and ((mgocAttribute < 0 and " <R>" or " <VP>") .. "(" .. tostring(mgocAttribute) .. ")") or "")) .. " <BL>| <J>x" .. cannon.mul
-		for k in next, mapEvaluators do
-			tfm.exec.chatMessage(text, k)
-		end
-	end
+	mapSettingsReview = false
 end
 
 -- Loop
@@ -1213,6 +1209,14 @@ eventLoop = function()
 			loadingNextMap = 3
 		end
 		return
+	end
+
+	if not mapSettingsReview and review then
+		mapSettingsReview = true
+		local text = tostring(tfm.get.room.currentMap) .. " : " .. (bhAttribute and "<VP>has" or "<R>no") .. " bh <BL>| " .. (mgocAttribute and "has" or "<VP>no") .. " mgoc" .. ((mgocAttribute and ((mgocAttribute < 0 and " <R>" or " <VP>") .. "(" .. tostring(mgocAttribute) .. ")") or "")) .. " <BL>| <J>x" .. cannon.mul
+		for k in next, mapEvaluators do
+			tfm.exec.chatMessage(text, k)
+		end
 	end
 
 	currentTime, leftTime = currentTime + .5, leftTime - .5
