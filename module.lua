@@ -1,5 +1,5 @@
 local module = {
-	owner = "Bolodefchoco#0000",
+	owner = "Bolodefchoco#0015",
 	id = "cn",
 	min_mice = 4,
 	map_file = 0,
@@ -11,7 +11,7 @@ local module = {
 local translations = {
 	en = {
 		-- Init
-		welcome = "Welcome to #cannonup. Your aim is to be the survivor!\n<VP>Press <B>P</B> to open your profile or <B>!p nickname</B> to see someone's profile!\n<J>Submit maps in <S>https://atelier801.com/topic?f=6&t=859067\n\t<J>Report any issue to Bolodefchoco#0000.",
+		welcome = "Welcome to #cannonup. Your aim is to be the survivor!\n<VP>Press <B>P</B> to open your profile or <B>!p nickname</B> to see someone's profile!\n<J>Submit maps in <S>https://atelier801.com/topic?f=6&t=859067\n\t<J>Report any issue to Bolodefchoco#0015.",
 
 		-- Info
 		nowinner = "No one won!",
@@ -58,7 +58,7 @@ local translations = {
 		}
 	},
 	br = {
-		welcome = "Bem-vindo ao #cannonup. Seu objetivo é ser o sobrevivente!\n<VP>Aperte <B>P</B> para abrir seu perfil ou <B>!p nickname</B> para ver o perfil de alguém!\n<J>Envie mapas em <S>https://atelier801.com/topic?f=6&t=859067\n\t<J>Reporte qualquer problema para Bolodefchoco#0000.",
+		welcome = "Bem-vindo ao #cannonup. Seu objetivo é ser o sobrevivente!\n<VP>Aperte <B>P</B> para abrir seu perfil ou <B>!p nickname</B> para ver o perfil de alguém!\n<J>Envie mapas em <S>https://atelier801.com/topic?f=6&t=859067\n\t<J>Reporte qualquer problema para Bolodefchoco#0015.",
 
 		nowinner = "Ninguém ganhou!",
 
@@ -105,7 +105,7 @@ local translation = translations[tfm.get.room.community] or translations.en
 
 --[[ Data ]]--
 local mapEvaluators = {
-	["Bolodefchoco#0000"] = true,
+	["Bolodefchoco#0015"] = true,
 	["Acer#0010"] = true,
 	["Jota#0676"] = true,
 	["Grapeup#0020"] = true
