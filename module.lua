@@ -951,9 +951,9 @@ do
 		end
 
 		playerCache[n].profile.target = p
-		playerCache[n].profile[1] = tfm.exec.addImage("165e26f4172.png", ":0", 256, 41, n, true)
+		playerCache[n].profile[1] = tfm.exec.addImage("165e26f4172.png", ":0", 256, 41, n)
 		ui.addTextArea(0, "<p align='center'><font size='" .. (#p > 17 and 14 or 18) .. "' color='#" .. colors[(p == module.owner and "owner" or mapEvaluators[p] and "map" or artist[p] and "art" or "normal")] .. "'>" .. (p:gsub("#", "<font size='10'><N2>#", 1)), n, 280, 65, 240, nil, 1, 1, 0, true)
-		playerCache[n].profile[2] = tfm.exec.addImage("165f818ebff.png", ":1", 290, 108, n, true) -- 165df8ebe60.png
+		playerCache[n].profile[2] = tfm.exec.addImage("165f818ebff.png", ":1", 290, 108, n) -- 165df8ebe60.png
 		ui.addTextArea(1, "<font size='16' color='#C1F8FB'>" .. translation.soon, n, 350, 126, 150, nil, 1, 1, 0, true)
 
 		local playerLevel, total, remaining = xpToLvl(playerData:get(p, "xp"))
